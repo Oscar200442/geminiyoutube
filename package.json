@@ -1,0 +1,12 @@
+{
+  "name": "youtube-transcript-app",
+  "version": "1.0.0",
+  "description": "A simple app to fetch YouTube transcripts.",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "youtube-transcript-api": "^0.6.1"
+  }
+}

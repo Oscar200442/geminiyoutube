@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Transskription</title>
+    <style>
+        body { font-family: sans-serif; padding: 2em; line-height: 1.6; }
+        .container { max-width: 600px; margin: auto; }
+        input[type="url"] { width: 100%; padding: 10px; margin-bottom: 1em; }
+        button { padding: 10px 20px; cursor: pointer; }
+        pre { background-color: #f4f4f4; padding: 1em; white-space: pre-wrap; word-wrap: break-word; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Transskription</h1>
+        <p>Indsæt et YouTube-link, og få den automatiske transskription.</p>
+        <input type="url" id="youtube-url" placeholder="Indsæt YouTube-link her..." required>
+        <button id="get-transcript-btn">Hent transskription</button>
+        <hr>
+        <div id="result-container">
+            <h3>Transskription:</h3>
+            <pre id="transcript-output"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('get-transcript-btn').addEventListener('click', async () => {
+            const urlInput = document.getElementById('youtube-url');
+            const youtubeUrl = urlInput.value;
+            const output = document.getElementById('transcript-output');
+            const resultContainer = document.getElementById('result-container');
+            
+            if (!youtubeUrl) {
+                alert('Indtast venligst et gyldigt YouTube-link.');
+                return;
+            }
+
+            output.textContent = 'Henter transskription...';
+            output.classList.remove('error');
+
+            try {
+                // Brug Vercel's serverless function til at hente transskriptionen
+                const response = await fetch('/api/get-transcript', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: youtubeUrl })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    output.textContent = data.transcript;
+                } else {
+                    throw new Error(data.error || 'Kunne ikke hente transskription.');
+                }
+            } catch (error) {
+                console.error(error);
+                output.textContent = `Fejl: ${error.message}`;
+                output.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
