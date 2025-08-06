@@ -7,6 +7,6 @@
     "start": "vercel dev"
   },
   "dependencies": {
-    "youtube-transcript-api": "^0.6.2"
+    "youtube-transcript-api": "^3.0.6"
   }
 }
